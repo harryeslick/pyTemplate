@@ -5,8 +5,7 @@
 ## Project Organization
 
 - **[Copier](https://copier.readthedocs.io/)** - For templating and project generation
-- **[Rye](https://rye-up.com/)** - For package and dependency management
-- **[uv](https://github.com/astral-sh/uv)** - For dependency installation in dev containers
+- **[uv](https://github.com/astral-sh/uv)** - For package and dependency management
 - **[MkDocs](https://www.mkdocs.org/)** - For documentation with GitHub Pages deployment
 - **[pytest](https://docs.pytest.org/)** - For testing with code coverage via pytest-cov
 - **[pre-commit](https://pre-commit.com/)** - For enforcing code quality with ruff and codespell
@@ -18,7 +17,7 @@
 
 ```bash
 # Setup virtual environment and install dependencies
-rye sync
+uv sync
 
 # Install pre-commit hooks
 pre-commit install-hooks

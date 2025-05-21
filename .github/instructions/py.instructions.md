@@ -73,4 +73,4 @@ You are an expert in data analysis, visualization, with a focus on Python librar
 ### File Structure
 
 - Organize code into modules and packages logically.
-- package management is done using `rye` and `uv`
+- package management is done using and `uv`

@@ -9,7 +9,6 @@ A modern Python project template with integrated tooling for development, testin
 This template uses:
 
 - **[Copier](https://copier.readthedocs.io/)** - For templating and project generation
-- **[Rye](https://rye-up.com/)** - For package and dependency management
 - **[uv](https://github.com/astral-sh/uv)** - For dependency installation in dev containers
 - **[MkDocs](https://www.mkdocs.org/)** - For documentation with GitHub Pages deployment
 - **[pytest](https://docs.pytest.org/)** - For testing with code coverage via pytest-cov
@@ -30,19 +29,13 @@ This template uses:
 
 ### Creating a New Project
 
-1. Install Copier if needed:
+0. Install Copier if needed:
+   `uv tool install copier`
 
-   ```
-   uv tool install copier
-   ```
+1. Create new GitHub repository and clone locally
 
-2. Generate your project:
-
-   ```
-   copier copy https://github.com/harryeslick/py_template path/to/destination
-   ```
-
-3. Customize the VS Code theme by changing `titleBar.activeBackground` in `.vscode/settings.json`
+2. Copy the project template into the local repo folder:
+   `copier copy https://github.com/harryeslick/pyTemplate path/to/destination`
 
 ### Setting Up Documentation
 
@@ -60,7 +53,7 @@ To enable automatic MkDocs deployment to GitHub Pages:
 
 ```bash
 # Setup virtual environment and install dependencies
-rye sync
+uv sync
 
 # Install pre-commit hooks
 pre-commit install-hooks

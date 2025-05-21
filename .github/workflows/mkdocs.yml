@@ -10,26 +10,23 @@ jobs:
     name: Deploy docs
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout main
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-      - name: Install the latest version of rye
-        uses: eifinger/setup-rye@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
+          cache-dependency-glob: "uv.lock"
 
-      # - name: Sync dependencies
-
-      # - name: Lint
-      # run: rye lint
+      - name: "Set up Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: "pyproject.toml"
 
       - name: Deploy
         run: |
-          rye sync
+          uv sync
           source .venv/bin/activate
           mkdocs gh-deploy --force
 
 
-        # uses: mhausenblas/mkdocs-deploy-gh-pages@master
-        # env:
-          # GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

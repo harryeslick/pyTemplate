@@ -3,16 +3,7 @@ name = "{{ project_name }}"
 authors = [{ name = "{{ author_name }}", email = "{{ author_email }}" }]
 description = "{{ project_description }}"
 readme = "README.md"
-classifiers = [
-    # "Development Status :: 3 - Alpha",
-    # "Intended Audience :: Developers",
-    # "License :: OSI Approved :: MIT License",1
-    # "Programming Language :: Python :: 3.8",
-    # "Programming Language :: Python :: 3.9",
-    # "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.12",
-]
-# requires-python = ">=3.8.1"
+
 dynamic = ["version"]
 dependencies = [
     "pandas>=2.2.3",
@@ -22,8 +13,8 @@ dependencies = [
     "rich"
 ]
 
-[tool.rye]
-dev-dependencies = [
+[dependency-groups]
+dev = [
     "mkdocs-material>=9.5.47",
     "mkdocs-jupyter>=0.25.1",
     "mkdocstrings[python]>=0.27.0",
@@ -62,3 +53,10 @@ branch = true
 addopts = "--cov-report term --cov src --cov-fail-under 0 --cov-append -m 'not integration'"
 pythonpath = ["src"]
 testpaths = "tests"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "src/{{project_name}}/__init__.py"
