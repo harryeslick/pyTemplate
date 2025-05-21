@@ -1,0 +1,41 @@
+# Copier configuration
+_templates_suffix: ".jinja"
+_envops:
+  block_start_string: "{%"
+  block_end_string: "%}"
+  variable_start_string: "{{"
+  variable_end_string: "}}"
+
+# Project variables
+project_name:
+  type: str
+  help: Name of the Python project
+  default: py_project
+
+project_description:
+  type: str
+  help: Short description of the project
+  default: A Python project template
+
+author_name:
+  type: str
+  help: Author name
+  default: Your Name
+
+author_email:
+  type: str
+  help: Author email
+  default: your.email@example.com
+
+# Optional
+version:
+  type: str
+  help: Initial version of the project
+  default: 0.1.0
+
+date:
+  type: str
+  help: ISO date
+  default: "2025-05-16"
+
+
