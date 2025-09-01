@@ -35,7 +35,9 @@ This template uses:
 1. Create new GitHub repository and clone locally
 
 2. Copy the project template into the local repo folder:  
-   `copier copy https://github.com/harryeslick/pyTemplate path/to/destination`
+   ```
+   copier copy https://github.com/harryeslick/pyTemplate path/to/destination
+   ```
 
 ### Setting Up Documentation
 
