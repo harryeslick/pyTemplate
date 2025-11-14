@@ -21,11 +21,7 @@ dev = [
     "mkdocstrings[python]>=0.27.0",
     "bandit[toml]==1.7.5",
     "pre-commit==3.3.1",
-    "pylint==2.17.4",
-    "pylint_junit",
     "pytest-cov==4.0.0",
-    "pytest-mock<3.10.1",
-    "pytest-runner",
     "pytest==7.3.1",
     "pytest-github-actions-annotate-failures",
     "plotly>=5.24.1",
@@ -38,12 +34,12 @@ dev = [
 
 
 [tool.ruff]
-line-length = 120
+line-length = 100
 indent-width = 4
 
 [tool.ruff.format]
 quote-style = "double"
-indent-style = "space"
+indent-style = "tab"
 docstring-code-format = false
 
 [tool.coverage.run]
@@ -51,7 +47,7 @@ branch = true
 
 
 [tool.pytest.ini_options]
-addopts = "--cov-report term --cov src --cov-fail-under 0 --cov-append -m 'not integration'"
+{# addopts = "--cov-report term --cov src --cov-fail-under 0 --cov-append -m 'not integration'" #}
 pythonpath = ["src"]
 testpaths = "tests"
 
