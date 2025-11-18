@@ -36,6 +36,10 @@ dev = [
 [tool.ruff]
 line-length = 100
 indent-width = 4
+extend-exclude = ["scratch.py"]
+
+[tool.ruff.lint]
+select = ["I"]  # Enable isort rules
 
 [tool.ruff.format]
 quote-style = "double"
