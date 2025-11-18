@@ -49,12 +49,6 @@ repos:
       # Run ruff formatter (replaces black)
       - id: ruff-format
 
-  # isort: Sort and organize Python imports
-  - repo: https://github.com/PyCQA/isort
-    rev: 5.12.0
-    hooks:
-      - id: isort
-
   # pyupgrade: Automatically upgrade Python syntax to newer versions
   - repo: https://github.com/asottile/pyupgrade
     rev: v2.31.0
