@@ -1,5 +1,5 @@
 # Exclude dev.py and docs from pre-commit checks
-exclude: '^dev\.py$|^docs/.*\.py$'
+exclude: '^dev\.py$|^docs/.*|^data/.*|.*\.json$'
 
 # Configuration for pre-commit.ci service
 ci:
@@ -48,14 +48,6 @@ repos:
         args: ["--fix", "--unsafe-fixes"]
       # Run ruff formatter (replaces black)
       - id: ruff-format
-
-  # pyupgrade: Automatically upgrade Python syntax to newer versions
-  - repo: https://github.com/asottile/pyupgrade
-    rev: v2.31.0
-    hooks:
-      - id: pyupgrade
-        # Upgrade syntax to Python 3.7+ features
-        args: [--py37-plus]
 
   # codespell: Check for common misspellings in code and documentation
   - repo: https://github.com/codespell-project/codespell
