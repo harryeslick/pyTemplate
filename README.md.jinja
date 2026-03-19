@@ -27,6 +27,24 @@ chmod +x .claude/hooks/pre-commit
 
 ```
 
+#### Agent Workflow
+
+```
+work in Claude Code
+  → session file auto-written to .claude/sessions/YY-MM-DD-<slug>.md
+git commit
+  → pre-commit hook detects new/modified session files
+  → calls Claude to summarise into .claude/CHANGELOG.md
+  → stages the updated changelog automatically
+
+(when ready to release)
+/version-increment patch|minor|major
+  → consolidates .claude/CHANGELOG.md into root CHANGELOG.md
+  → bumps version in pyproject.toml
+  → archives the session log
+```
+
+
 ### Using VS Code DevContainer
 
 1. Open project folder in VS Code
