@@ -20,7 +20,11 @@
 uv sync
 
 # Install pre-commit hooks
-pre-commit install-hooks
+pre-commit install --install-hooks
+
+# Make the Claude worklog hook executable
+chmod +x .claude/hooks/pre-commit
+
 ```
 
 ### Using VS Code DevContainer

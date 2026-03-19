@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+# .claude/hooks/pre-commit
+#
+# Summarises any new or modified .claude/sessions/*.md files into
+# .claude/CHANGELOG.md using the Claude CLI, then stages the result.
+#
+# Install:
+#   ln -sf ../../.claude/hooks/pre-commit .git/hooks/pre-commit
+#   chmod +x .claude/hooks/pre-commit
+#
+# Requires: Claude Code CLI (`claude`) on PATH
+
+set -euo pipefail
+
+SESSIONS_DIR=".claude/sessions"
+CHANGELOG=".claude/AGENT-CHANGELOG.md"
+HOOK_PROMPT_FILE=".claude/hooks/pre-commit-prompt.md"
+
+# ── 1. Find staged or modified session files ──────────────────────────────────
+# Include both staged (A/M in index) and unstaged modified session files so a
+# session written during the commit-prep phase is always captured.
+CHANGED_SESSIONS=$(git diff --name-only --diff-filter=AM HEAD -- "${SESSIONS_DIR}/*.md" 2>/dev/null || true)
+STAGED_SESSIONS=$(git diff --cached --name-only --diff-filter=AM -- "${SESSIONS_DIR}/*.md" 2>/dev/null || true)
+
+SESSIONS=$(printf "%s\n%s" "$CHANGED_SESSIONS" "$STAGED_SESSIONS" | sort -u | grep -v '^$' || true)
+
+if [[ -z "$SESSIONS" ]]; then
+  exit 0   # no session files touched — nothing to do
+fi
+
+echo "[worklog] Detected session file(s):"
+echo "$SESSIONS" | sed 's/^/  /'
+
+# ── 2. Build context: collect content of changed session files ────────────────
+SESSION_CONTENT=""
+while IFS= read -r f; do
+  if [[ -f "$f" ]]; then
+    SESSION_CONTENT+="
+---FILE: $f---
+$(cat "$f")
+"
+  fi
+done <<< "$SESSIONS"
+
+# ── 3. Read existing changelog (may be empty / non-existent) ─────────────────
+EXISTING_CHANGELOG=""
+if [[ -f "$CHANGELOG" ]]; then
+  EXISTING_CHANGELOG=$(cat "$CHANGELOG")
+fi
+
+# ── 4. Call Claude to produce the updated changelog ───────────────────────────
+PROMPT=$(cat "$HOOK_PROMPT_FILE")
+FULL_PROMPT="${PROMPT}
+
+## Existing .claude/CHANGELOG.md
+${EXISTING_CHANGELOG:-"(empty — create fresh)"}
+
+## New / updated session files
+${SESSION_CONTENT}"
+
+echo "[worklog] Summarising sessions into ${CHANGELOG} ..."
+
+NEW_CHANGELOG=$(echo "$FULL_PROMPT" | claude --print --no-markdown 2>/dev/null)
+
+if [[ -z "$NEW_CHANGELOG" ]]; then
+  echo "[worklog] WARNING: Claude returned empty output — changelog not updated."
+  exit 0
+fi
+
+# ── 5. Write and stage the updated changelog ─────────────────────────────────
+echo "$NEW_CHANGELOG" >> "$CHANGELOG"
+markdownlint --fix "$CHANGELOG"
+git add "$CHANGELOG"
+
+# ── 6. copy to clipboard ─────────────────────────────────
+echo "$NEW_CHANGELOG" | pbcopy
+
+echo "[worklog] ${CHANGELOG} updated and staged."

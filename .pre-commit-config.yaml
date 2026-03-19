@@ -85,3 +85,12 @@ repos:
       - id: check-manifest
         # Only run when explicitly invoked (not on every commit)
         stages: [manual]
+
+  - repo: local
+    hooks:
+      - id: claude-worklog
+        name: Claude session worklog
+        entry: .claude/hooks/pre-commit
+        language: script
+        files: '^\.claude/' # only run is there are changes in .claude/
+        pass_filenames: false
