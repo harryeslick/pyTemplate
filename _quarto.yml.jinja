@@ -1,0 +1,58 @@
+project:
+  type: website
+  output-dir: _site
+  render:
+    - "*.qmd"
+    - "*.ipynb"
+    - "docs/"
+    - "notebooks/"
+
+metadata-files:
+  - docs/reference/_sidebar.yml
+
+website:
+  title: "{{project_name}}"
+  description: "{{project_description}}"
+  # repo-url: https://github.com/your-org/{{project_name}}
+  search:
+    location: navbar
+    type: overlay
+  navbar:
+    background: primary
+    search: true
+    left:
+      - text: "Home"
+        href: docs/index.qmd
+      - text: "Changelog"
+        href: docs/CHANGELOG.md
+      - text: "API Reference"
+        href: docs/reference/index.qmd
+      - text: "Notebooks"
+        menu:
+          - text: "Example"
+            href: notebooks/example.ipynb
+  page-navigation: true
+
+format:
+  html:
+    theme: cosmo
+    css: docs/reference/_styles-quartodoc.css
+    toc: true
+    toc-depth: 3
+    code-copy: true
+    code-overflow: wrap
+
+quartodoc:
+  package: {{project_name}}
+  dir: docs/reference
+  sidebar: docs/reference/_sidebar.yml
+  title: "API Reference"
+  sections:
+    - title: "Hello Module"
+      desc: "Core hello world functionality"
+      contents:
+        - hello_world
+
+execute:
+  freeze: auto
+  enabled: true

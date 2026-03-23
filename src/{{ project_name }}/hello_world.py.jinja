@@ -1,0 +1,26 @@
+"""Example module demonstrating API documentation with quartodoc."""
+
+from __future__ import annotations
+
+
+def hello(name: str = "World") -> str:
+    """Return a greeting string.
+
+    Parameters
+    ----------
+    name
+        The name to greet.
+
+    Returns
+    -------
+    str
+        A greeting message.
+
+    Examples
+    --------
+    >>> hello()
+    'Hello, World!'
+    >>> hello("Quarto")
+    'Hello, Quarto!'
+    """
+    return f"Hello, {name}!"

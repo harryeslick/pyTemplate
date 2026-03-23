@@ -68,12 +68,7 @@ If the user says "implement X" but no contract exists, run **A then B** sequenti
    following the 5-section structure below
 3. **Leave section 3 (the function call) calling a function that does not yet exist** —
    this is intentional; the notebook should fail until implemented
-4. **Sync to `.ipynb`:**
-   ```bash
-   jupytext --sync notebooks/contracts/{function_name}.py
-   ```
-5. **Present the contract to the user for approval.** Do NOT proceed to implementation
-   until the user confirms the contract is correct.
+4. **Present the contract to the user for approval.** Do NOT proceed to implementation. Prompt the user to run the contract, then end the current session.
 
 ---
 
@@ -83,9 +78,13 @@ If the user says "implement X" but no contract exists, run **A then B** sequenti
    input schema, output schema, and all assertions
 2. **Create the implementation file** in `src/{package_name}/` with the module path
    inferred from the import statement in the contract
-3. **Run the contract as a test:**
+3. **Run the contract as a test** (pytest executes `.py` notebooks directly):
    ```bash
-   pytest --nbmake notebooks/contracts/{notebook_name}.ipynb -v
+   make test-contracts
+   ```
+   Or for a single contract:
+   ```bash
+   pytest notebooks/contracts/{name}.py -v
    ```
 4. **Iterate on the implementation only** until all assertions pass.
    Do NOT modify the contract without explicit user approval.
@@ -101,11 +100,11 @@ frozen outputs are wrong.
 
 1. **Confirm with the user** that archiving is appropriate. State which contract
    will be archived and what the breaking change is.
-2. **Sync and execute the current contract to a temporary file:**
+2. **Convert and execute the current contract to a temporary file:**
    ```bash
-   jupytext --sync notebooks/contracts/{name}.py
+   jupytext --to ipynb notebooks/contracts/{name}.py --output /tmp/{name}.ipynb
    jupyter nbconvert --to notebook --execute \
-     notebooks/contracts/{name}.ipynb \
+     /tmp/{name}.ipynb \
      --output /tmp/{name}_executed.ipynb
    ```
 3. **Move the executed `.ipynb` (with frozen outputs) to the archive:**
@@ -241,24 +240,27 @@ assert result[CRITICAL_COLS].notna().all().all()
 ## File Conventions
 
 ```
+_quarto.yml                ← Quarto site config (project root)
+
 notebooks/
-├── contracts/          ← live contracts: tested in CI, executed by Quarto
-│   └── {name}.py       ← Jupytext percent-format source (SOURCE OF TRUTH)
-│   └── {name}.ipynb    ← paired notebook (gitignored — regenerated from .py)
+├── contracts/             ← live contracts: tested in CI, rendered by Quarto
+│   ├── conftest.py        ← pytest collector: runs .py notebooks via jupytext + nbclient
+│   ├── {name}.py          ← Jupytext percent-format source (SOURCE OF TRUTH)
+│   └── slow/              ← pre-executed slow contracts (committed as .ipynb)
+│       └── {name}.ipynb   ← .ipynb with frozen outputs, too slow for CI
 └── archive/
-    └── v{N}/           ← frozen historical record, never executed
+    └── v{N}/              ← frozen historical record, never executed
         └── {name}_v{N}.ipynb   ← .ipynb only, outputs saved, committed
 
 src/
 └── {package_name}/
-    └── {module}.py     ← implementation files
-
-docs/
-└── _quarto.yml         ← Quarto site config (if applicable)
+    └── {module}.py        ← implementation files
 ```
 
 **Source of truth is always the `.py` file.** Never edit `.ipynb` directly.
-The `.ipynb` in `contracts/` is gitignored and regenerated via `jupytext --sync`.
+No `.ipynb` conversion is needed for testing — `notebooks/contracts/conftest.py` teaches
+pytest to collect and execute `.py` percent-format notebooks directly using jupytext +
+nbclient in-memory. Only `archive/` and `contracts/slow/` contain committed `.ipynb` files.
 The `.ipynb` in `archive/` is committed with outputs frozen.
 
 ---
@@ -274,7 +276,6 @@ Standard front matter for all contract notebooks (top of `.py` file):
 #   enabled: true
 # jupyter:
 #   jupytext:
-#     formats: ipynb,py:percent
 #     text_representation:
 #       extension: .py
 #       format_name: percent
@@ -285,33 +286,36 @@ Standard front matter for all contract notebooks (top of `.py` file):
 # ---
 ```
 
-For slow contracts (e.g. Monte Carlo validation), place them in a dedicated path
-like `notebooks/contracts/slow/` and exclude via pytest path in CI:
+For slow contracts (e.g. Monte Carlo validation), place them in
+`notebooks/contracts/slow/` as pre-executed `.ipynb` files with frozen outputs.
+These are committed to the repo (allowed by `.gitignore`) and excluded from
+`make test-contracts`. Test them separately when needed:
 
 ```bash
-# Fast CI: skip slow contracts by path
-pytest --nbmake notebooks/contracts/ --ignore=notebooks/contracts/slow/ -v
-
-# Full suite including slow validation notebooks
-pytest --nbmake notebooks/contracts/ -v
+pytest notebooks/contracts/slow/ -v
 ```
 
 ---
 
 ## Running Tests
 
+The project uses a custom pytest collector (`notebooks/contracts/conftest.py`)
+that executes `.py` percent-format notebooks directly using jupytext + nbclient
+in-memory. No `.ipynb` conversion is needed.
+
 ```bash
-# All live contracts
-pytest --nbmake notebooks/contracts/ -v
+# All live contracts (recommended)
+make test-contracts
 
 # Single contract
-pytest --nbmake notebooks/contracts/{name}.ipynb -v
+pytest notebooks/contracts/{name}.py -v
+```
 
-# Exclude slow contracts (by path convention)
-pytest --nbmake notebooks/contracts/ --ignore=notebooks/contracts/slow/ -v
+Slow contracts in `notebooks/contracts/slow/` are pre-executed `.ipynb` files
+and are excluded from `make test-contracts`. Test them separately:
 
-# Full suite (never runs archive — archive stays frozen)
-pytest --nbmake notebooks/ --ignore=notebooks/archive -v
+```bash
+pytest notebooks/contracts/slow/ -v
 ```
 
 ---
@@ -324,7 +328,7 @@ After finishing any workflow, report to the user:
 Workflow:     [A: Create Contract | B: Implement | C: Archive]
 Contract:     notebooks/contracts/{name}.py
 Module:       src/{package}/{module}.py  (if applicable)
-Test result:  pytest --nbmake ... → PASSED / FAILED
+Test result:  pytest notebooks/contracts/{name}.py → PASSED / FAILED
 Assertions:   N type, N shape, N dtype, N plausibility
 Next steps:   [user review / commit / further iteration]
 ```

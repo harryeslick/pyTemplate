@@ -15,7 +15,8 @@
                 "charliermarsh.ruff",
                 "tamasfe.even-better-toml",
                 "GitHub.copilot",
-                "exodiusstudios.comment-anchors"
+                "exodiusstudios.comment-anchors",
+                "quarto.quarto"
             ]
         }
     },

@@ -6,7 +6,8 @@
 
 - **[Copier](https://copier.readthedocs.io/)** - For templating and project generation
 - **[uv](https://github.com/astral-sh/uv)** - For package and dependency management
-- **[MkDocs](https://www.mkdocs.org/)** - For documentation with GitHub Pages deployment
+- **[Quarto](https://quarto.org/)** - For documentation with GitHub Pages deployment
+- **[quartodoc](https://machow.github.io/quartodoc/)** - For Python API reference documentation
 - **[pytest](https://docs.pytest.org/)** - For testing with code coverage via pytest-cov
 - **[pre-commit](https://pre-commit.com/)** - For enforcing code quality with ruff and codespell
 
@@ -25,9 +26,27 @@ pre-commit install --install-hooks
 # Make the Claude worklog hook executable
 chmod +x .claude/hooks/pre-commit
 
+# Install Quarto (macOS)
+brew install --cask quarto
 ```
 
-#### Agent Workflow
+### Documentation
+
+```bash
+# Preview docs locally (converts notebooks, builds API reference, launches preview)
+make preview
+
+# Full build (output to _site/)
+make docs
+
+# Run contract notebook tests
+make test-contracts
+
+# Clean all generated artifacts
+make clean
+```
+
+### Agent Workflow
 
 ```
 work in Claude Code
