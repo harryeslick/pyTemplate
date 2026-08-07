@@ -6,6 +6,20 @@ _envops:
   variable_start_string: "{{"
   variable_end_string: "}}"
 
+# Files that belong to this template repo only, not to generated projects.
+# NOTE: setting _exclude replaces copier's defaults, so they are repeated here.
+_exclude:
+  - "copier.yml"
+  - "copier.yaml"
+  - "~*"
+  - "*.py[co]"
+  - "__pycache__"
+  - ".git"
+  - "*/.git"
+  - ".DS_Store"
+  - ".svn"
+  - "ruff.toml" # generated projects configure ruff in pyproject.toml
+
 # Project variables
 project_name:
   type: str
@@ -37,5 +51,3 @@ date:
   type: str
   help: ISO date
   default: "2025-05-16"
-
-

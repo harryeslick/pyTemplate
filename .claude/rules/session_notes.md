@@ -31,4 +31,3 @@ Keep session summaries **specific**: reference real file names, function names, 
 ### AGENT-CHANGELOG (`.claude/AGENT-CHANGELOG.md`)
 
 managed by `.claude/hooks/pre-commit`
-

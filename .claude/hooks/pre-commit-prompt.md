@@ -33,8 +33,8 @@ in the session files. Do not pad with generic statements.>
 - If there is no existing content, start with:
   ```
   # Agent Session Log
-  
+
   Run `/version-increment` to consolidate into the project CHANGELOG.md.
-  
+
   ---
   ```

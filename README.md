@@ -29,12 +29,12 @@ This template uses:
 
 ### Creating a New Project
 
-0. Install Copier if needed:  
+0. Install Copier if needed:
    `uv tool install copier`
 
 1. Create new GitHub repository and clone locally
 
-2. Copy the project template into the local repo folder:  
+2. Copy the project template into the local repo folder:
    ```
    copier copy https://github.com/harryeslick/pyTemplate path/to/destination
    ```

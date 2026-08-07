@@ -42,9 +42,9 @@ Keep session summaries **specific**: reference real file names, function names, 
 | `/session-status` | Print mid-session checkpoint (read-only) |
 | `/version-increment [patch\|minor\|major]` | Consolidate session log → CHANGELOG.md, bump version, archive |
 
-Use `/session-end` at the close of every meaningful work session.  
-Use `/version-increment patch` for routine releases after a batch of sessions.  
-Use `/version-increment minor` when a new pipeline stage, model, or feature is complete.  
+Use `/session-end` at the close of every meaningful work session.
+Use `/version-increment patch` for routine releases after a batch of sessions.
+Use `/version-increment minor` when a new pipeline stage, model, or feature is complete.
 Use `/version-increment major` for breaking changes to data formats, APIs, or core model architecture.
 
 ---
@@ -58,4 +58,3 @@ Use `/version-increment major` for breaking changes to data formats, APIs, or co
 | `major` | Breaking change to output formats, removal of a pipeline stage, API redesign |
 
 ---
-

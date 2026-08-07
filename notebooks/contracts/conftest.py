@@ -4,8 +4,8 @@ Executes each notebook in-memory using jupytext + nbclient,
 so no .ipynb conversion is needed on disk.
 """
 
-import pytest
 import jupytext
+import pytest
 from nbclient import NotebookClient
 
 

@@ -1,0 +1,24 @@
+# Ruff settings for the TEMPLATE REPO ITSELF (src/, notebooks/ contract tests).
+# Generated projects get their equivalent from pyproject.toml.jinja instead;
+# copier excludes this file so the two never coexist. Keep them in sync.
+line-length = 100
+indent-width = 4
+extend-exclude = ["scratch.py"]
+
+[lint]
+select = [
+    "E",   # pycodestyle errors
+    "F",   # pyflakes
+    "I",   # isort
+    "UP",  # pyupgrade (modern Python syntax)
+    "SIM", # flake8-simplify
+]
+
+[lint.isort]
+force-wrap-aliases = true
+combine-as-imports = true
+
+[format]
+quote-style = "double"
+indent-style = "tab"
+docstring-code-format = false
